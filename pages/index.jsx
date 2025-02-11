@@ -96,7 +96,7 @@ export default function Home() {
             </form>
           </div>
 
-         <Table />
+          <Table />
         </div>
       </div>
     </>

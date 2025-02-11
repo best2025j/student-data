@@ -13,12 +13,15 @@ export default function Table() {
           "https://test.omniswift.com.ng/api/viewAllData"
         );
 
-        setStudents(response.data); // ✅ Axios handles JSON parsing automatically
+        console.log("API Response:", response.data); // ✅ Debug API Response
+
+        // ✅ Extract students correctly
+        setStudents(response.data.data.students);
       } catch (error) {
-        console.log("Error while fetching data:", error);
-        setError(error.message); // ✅ Fixed error handling
+        console.error("Error fetching data:", error);
+        setError(error.message);
       } finally {
-        setLoading(false); // ✅ Stop loading after request
+        setLoading(false);
       }
     };
 
@@ -28,53 +31,49 @@ export default function Table() {
   return (
     <div className="w-full px-8 py-3 bg-white">
       {loading ? (
-        <p>Loading...</p>
-      ) : students.length === 0 ? (
-        <div className="overflow-y-auto pt-8 h-[480px] ">
+        <p className="text-center text-blue-500">Loading...</p>
+      ) : error ? (
+        <p className="text-center text-red-500">Error: {error}</p>
+      ) : students.length > 0 ? (
+        <div className="overflow-y-auto w-full h-[400px]">
           <table className="table-fixed w-full border-collapse">
             <thead>
-              <tr className="bg-gray-200 text-black text-sm font-bold h-14">
-                <th className="">S/N</th>
-                <th className="">Surname</th>
-                <th className="">First Name</th>
-                <th className="">Age</th>
-                <th className="">Gender</th>
-                <th className="">Level</th>
-                <th className="">State</th>
-                <th className="">Action</th>
+              <tr className="bg-gray-200 text-black text-left  text-sm font-bold h-14">
+                <th className="text-center">S/N</th>
+                <th>Surname</th>
+                <th>First Name</th>
+                <th>Age</th>
+                <th>Gender</th>
+                <th>Level</th>
+                <th>State</th>
+                <th className="text-center">Action</th>
               </tr>
             </thead>
-
             <tbody>
-              {students.map((student, index) => {
-                return (
-                  <tr
-                    key={index}
-                    className="border-b text-sm border-gray-300 h-14 text-center text-black-10"
-                  >
-                    <td className="">{index + 1}</td>
-                    <td className="">{student.Surname || "N/A"}</td>
-                    <td className="">{student.Firstname || "N/A"}</td>
-                    <td className="">{student.age || "N/A"}</td>
-                    <td className="">{student.gender || "N/A"}</td>
-                    <td className="">{student.level || "N/A"}</td>
-                    <td className="">{student.state || "N/A"}</td>
-                    <td className="">
-                      <button className="bg-green-500 hover:bg-green-600 transition-all font-normal w-[126px] h-[35px] text-xs text-white rounded">
-                        Download File
-                      </button>
-                    </td>
-                  </tr>
-                );
-              })}
-              ,
+              {students.map((student, index) => (
+                <tr
+                  key={index}
+                  className="border-b text-sm border-gray-300 h-14 text-left text-black-10 capitalize"
+                >
+                  <td className="text-center">{index + 1}</td>
+                  <td>{student.surname || "N/A"}</td>
+                  <td>{student.firstname || "N/A"}</td>
+                  <td>{student.age || "N/A"}</td>
+                  <td>{student.gender || "N/A"}</td>
+                  <td>{student.level || "N/A"}</td>
+                  <td>{student.state || "N/A"}</td>
+                  <td className="text-center">
+                    <button className="bg-green-500 hover:bg-green-600 transition-all font-normal w-[126px] h-[35px] text-xs text-white rounded">
+                      Download File
+                    </button>
+                  </td>
+                </tr>
+              ))}
             </tbody>
           </table>
         </div>
       ) : (
-        <p colSpan="8" className="text-center py-4 text-gray-500">
-          No data available
-        </p>
+        <p className="text-center py-4 text-gray-500">No data available</p>
       )}
     </div>
   );

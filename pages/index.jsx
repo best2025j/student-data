@@ -3,13 +3,35 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Table from "../components/Table";
 
-export default function Home() {
-  const fields = [
+
+ const formFields = [
     { id: "age", label: "Age", type: "text" },
     { id: "state", label: "State", type: "text" },
-    { id: "level", label: "Level", type: "text" },
-    { id: "gender", label: "Gender", type: "text" }, // You can replace this with a dropdown if needed
-  ];
+    {
+      id: "gender",
+      type: "select",
+      label: "Gender",
+      options: [
+        { value: "male", label: "Male" },
+        { value: "female", label: "Female" },
+        { value: "other", label: "Other" },
+      ],
+    },
+    {
+      id: "level",
+      type: "select",
+      label: "Level",
+      options: [
+        { value: "100", label: "100" },
+        { value: "200", label: "200" },
+        { value: "300", label: "300" },
+        { value: "400", label: "400" },
+      ],
+    },
+ ];
+  
+export default function Home() {
+ 
 
   const [formData, setFormData] = useState({});
   // const navigate = useNavigate();
@@ -45,18 +67,35 @@ export default function Home() {
 
             <form
               onSubmit={handleSubmit}
-              className="gap-4 grid grid-cols-3 items-center py-8"
+              className="gap-4 grid grid-cols-3 items-center py-8 w-full"
             >
-              {fields.map((field) => (
+              {formFields.map((field) => (
                 <fieldset
                   key={field.id}
-                  className="border border-[#ADB7BE] px-4 rounded-md"
+                  className="border border-gray-400 px-4 py-2 rounded-md"
                 >
-                  <legend className="text-lg font-semibold text-gray-700 px-2">
+                  <legend className="text-sm font-semibold text-gray-700 px-2">
                     {field.label}
                   </legend>
 
-                  <div className="relative py-1">
+                  {/* Conditional rendering for select & input fields */}
+                  {field.type === "select" ? (
+                    <select
+                      id={field.id}
+                      name={field.id}
+                      value={formData[field.id] || ""}
+                      onChange={handleChange}
+                      required
+                      className="w-full p-1 rounded outline-none"
+                    >
+                      <option value="">Select {field.label}</option>
+                      {field.options.map((option, index) => (
+                        <option key={index} value={option.value}>
+                          {option.label}
+                        </option>
+                      ))}
+                    </select>
+                  ) : (
                     <input
                       type={field.type}
                       id={field.id}
@@ -64,33 +103,18 @@ export default function Home() {
                       value={formData[field.id] || ""}
                       onChange={handleChange}
                       required
-                      className="w-full p-2 outline-none"
+                      className="w-full p-1 rounded outline-none"
                     />
-                    <span className="w-5 h-5 text-gray-500 absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        strokeWidth="1.5"
-                        stroke="currentColor"
-                        className="size-6"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          d="m19.5 8.25-7.5 7.5-7.5-7.5"
-                        />
-                      </svg>
-                    </span>
-                  </div>
+                  )}
                 </fieldset>
               ))}
 
+              {/* Submit Button */}
               <div className="pt-3">
                 <input
                   type="submit"
                   value="Search"
-                  className="rounded py-4.5 bg-green-10 text-white w-full"
+                  className="rounded py-4 bg-green-500 text-white w-full hover:bg-green-600 transition"
                 />
               </div>
             </form>

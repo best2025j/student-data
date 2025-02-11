@@ -39,7 +39,29 @@ export default function Table() {
   return (
     <div className="w-full px-8 py-3 bg-white">
       {loading ? (
-        <p className="text-center text-blue-500">Loading...</p>
+        <p className="text-center flex flex-col justify-center items-center h-[450px] w-full text-blue-500">
+          <svg
+            className="animate-spin h-8 w-8 text-blue-500 mb-2"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+          >
+            <circle
+              className="opacity-25"
+              cx="12"
+              cy="12"
+              r="10"
+              stroke="currentColor"
+              strokeWidth="4"
+            ></circle>
+            <path
+              className="opacity-75"
+              fill="currentColor"
+              d="M4 12a8 8 0 018-8v8H4z"
+            ></path>
+          </svg>
+          Loading...
+        </p>
       ) : error ? (
         <p className="text-center text-red-500">Error: {error}</p>
       ) : students.length > 0 ? (

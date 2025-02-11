@@ -1,0 +1,33 @@
+body {
+  background-color: #ececec;
+}
+
+/* ✅ Chrome, Safari, Edge */
+::-webkit-scrollbar {
+  width: 14px; /* Ensures scrollbar width is always 14px */
+  height: 14px;
+}
+
+/* Scrollbar Thumb (Draggable part) */
+::-webkit-scrollbar-thumb {
+  background-color: green; /* Green scrollbar */
+  border-radius: 10px; /* Rounded corners */
+  border: 3px solid white; /* White border around thumb */
+}
+
+/* Scrollbar Track (Background) */
+::-webkit-scrollbar-track {
+  background: #f1f1f1; /* Light gray track */
+  border-radius: 10px;
+}
+
+/* ✅ Firefox */
+html {
+  scrollbar-width: 14px; /* Forces the scrollbar to stay 14px wide */
+  scrollbar-color: green white; /* Thumb color | Track color */
+}
+
+.no-scrollbar {
+  -ms-overflow-style: none; /* IE & Edge */
+  scrollbar-width: none; /* Firefox */
+}

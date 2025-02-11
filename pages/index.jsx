@@ -35,7 +35,7 @@ export default function Home() {
 
   return (
     <>
-      <div className="w-[90%]  h-full flex-col flex justify-center mx-auto items-start relative top-[30px]">
+      <div className="w-[90%] h-full flex-col flex justify-center mx-auto items-start relative top-[30px]">
         <div className="space-y-4 w-full">
           <h1 className=" text-4xl text-black-10 font-black">
             Student Data Table
@@ -64,7 +64,7 @@ export default function Home() {
                       value={formData[field.id] || ""}
                       onChange={handleChange}
                       required
-                      className="w-full mt-1 p-2 outline-none"
+                      className="w-full p-2 outline-none"
                     />
                     <span className="w-5 h-5 text-gray-500 absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none">
                       <svg
@@ -90,7 +90,7 @@ export default function Home() {
                 <input
                   type="submit"
                   value="Search"
-                  className="rounded py-5.5 bg-green-10 text-white w-full"
+                  className="rounded py-4.5 bg-green-10 text-white w-full"
                 />
               </div>
             </form>

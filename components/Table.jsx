@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 export default function Table() {
   const [students, setStudents] = useState([]); // State to store student data
@@ -28,6 +29,12 @@ export default function Table() {
     fetchData();
   }, []);
 
+  const navigate = useNavigate();
+
+  const handleRowClick = (student) => {
+    navigate("/result", { state: { student } }); // Pass student data to Result Page
+  };
+
   return (
     <div className="w-full px-8 py-3 bg-white">
       {loading ? (
@@ -35,7 +42,7 @@ export default function Table() {
       ) : error ? (
         <p className="text-center text-red-500">Error: {error}</p>
       ) : students.length > 0 ? (
-        <div className="overflow-y-auto w-full h-[400px]">
+        <div className="overflow-y-auto w-full h-[450px]">
           <table className="table-fixed w-full border-collapse">
             <thead>
               <tr className="bg-gray-200 text-black text-left  text-sm font-bold h-14">
@@ -53,7 +60,8 @@ export default function Table() {
               {students.map((student, index) => (
                 <tr
                   key={index}
-                  className="border-b text-sm border-gray-300 h-14 text-left text-black-10 capitalize"
+                  onClick={() => handleRowClick(student)} // ✅ Navigate when row is clicked
+                  className="border-b text-sm border-gray-300 h-14 text-left text-black-10 capitalize cursor-pointer"
                 >
                   <td className="text-center">{index + 1}</td>
                   <td>{student.surname || "N/A"}</td>

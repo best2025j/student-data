@@ -6,7 +6,14 @@ import "./App.css";
 // ✅ Define routes properly
 const router = createBrowserRouter(
   [
-    { path: "/", element: <Home /> },
+    {
+      path: "/",
+      element: (
+        <div className="!bg-[#F6F6F6] min-h-screen">
+          <Home />
+        </div>
+      ),
+    },
     { path: "/result", element: <Result /> },
   ],
   {
@@ -24,14 +31,14 @@ const App = () => {
   return (
     <div className="app">
       {/* ✅ Add Navigation */}
-      <nav className="gap-10 w-full mx-auto justify-center p-4 flex items-center">
+      {/* <nav className="gap-10 w-full mx-auto justify-center p-4 flex items-center">
         <a href="/" className="">
           Home
         </a>
         <a href="/result" className="">
           Result
         </a>
-      </nav>
+      </nav> */}
 
       {/* ✅ Provide the Router */}
       <RouterProvider

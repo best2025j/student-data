@@ -15,7 +15,7 @@ const router = createBrowserRouter(
         </div>
       ),
     },
-    { path: "/result", element: <Result /> },
+    { path: "/result/:id", element: <Result /> },
   ],
   {
     future: {
@@ -29,32 +29,8 @@ const router = createBrowserRouter(
 );
 
 const App = () => {
-    const [isLoaded, setIsLoaded] = useState(false);
-
-    useEffect(() => {
-      // ✅ Ensure all styles are loaded before rendering
-      const handleLoad = () => setIsLoaded(true);
-      window.addEventListener("load", handleLoad);
-      return () => window.removeEventListener("load", handleLoad);
-    }, []);
-
-    if (!isLoaded) {
-      return <p className="text-center text-blue-500 mt-10">Loading...</p>; // ✅ Temporary loading state
-    }
-
-  
   return (
     <div className="app">
-      {/* ✅ Add Navigation */}
-      {/* <nav className="gap-10 w-full mx-auto justify-center p-4 flex items-center">
-        <a href="/" className="">
-          Home
-        </a>
-        <a href="/result" className="">
-          Result
-        </a>
-      </nav> */}
-
       {/* ✅ Provide the Router */}
       <RouterProvider
         future={{ v7_startTransition: true }} // Enables React's startTransition API

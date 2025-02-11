@@ -32,7 +32,8 @@ export default function Table() {
   const navigate = useNavigate();
 
   const handleRowClick = (student) => {
-    navigate("/result", { state: { student } }); // Pass student data to Result Page
+    // ✅ Pass student ID in URL + State
+    navigate(`/result/${student.id}`, { state: { student } });
   };
 
   return (
@@ -56,6 +57,7 @@ export default function Table() {
                 <th className="text-center">Action</th>
               </tr>
             </thead>
+
             <tbody>
               {students.map((student, index) => (
                 <tr
@@ -71,7 +73,10 @@ export default function Table() {
                   <td>{student.level || "N/A"}</td>
                   <td>{student.state || "N/A"}</td>
                   <td className="text-center">
-                    <button className="bg-green-500 hover:bg-green-600 transition-all font-normal w-[126px] h-[35px] text-xs text-white rounded">
+                    <button
+                      onClick={(e) => e.stopPropagation()} // ✅ Prevents row click when button is clicked
+                      className="bg-green-500 hover:bg-green-600 transition-all font-normal w-[126px] h-[35px] text-xs text-white rounded"
+                    >
                       Download File
                     </button>
                   </td>

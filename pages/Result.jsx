@@ -96,16 +96,6 @@ export default function Result() {
         </div>
       </div>
 
-      {/*  "id": 2,
-    "surname": "bobby",
-    "firstname": "Mary",
-    "age": 25,
-    "gender": "female",
-    "level": "200 Level",
-    "state": "Abuja",
-    "reg_no": "FCE/PGDE/2021/002",
-    "session": "2022/2023 Session", */}
-
       {/* Student Details */}
       <div className="flex justify-between w-full py-6">
         <div className="flex-col flex text-xs gap-4">
@@ -150,7 +140,7 @@ export default function Result() {
       {/* Results Table */}
       <div className="w-full bg-white">
         <div className="overflow-y-auto full ">
-          <table className="table-fixed w-full border-collapse">
+          <table className="table-fixed w-full border-collapse bg-white">
             <thead>
               <tr className="bg-[#0D7590] text-white text-left text-sm font-bold h-14">
                 <th className="text-center">S/N</th>
@@ -166,7 +156,7 @@ export default function Result() {
               {result?.map((course, index) => (
                 <tr
                   key={index}
-                  className="text-sm bg-[#F2F2F2] h-14 text-left text-black"
+                  className="text-sm bg-[#F2F2F2] even:bg-white h-14 text-left text-black"
                 >
                   <td className="text-center">{index + 1}</td>
                   <td>{course.coursecode}</td>

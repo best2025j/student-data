@@ -3,7 +3,7 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
-  "homepage": "https://best2025j.github.io/student-data",
+  "homepage": "https://best2025j.github.com/student-data",
   "scripts": {
     "dev": "vite",
     "build": "vite build",

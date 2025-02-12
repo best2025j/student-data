@@ -1,4 +1,5 @@
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const Table = ({ students, loading, error }) => {
   const navigate = useNavigate(); // ✅ Ensure this is declared

@@ -1,32 +1,9 @@
-import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
 
 export default function Table({ students, loading, error }) {
-  const navigate = useNavigate();
+  const navigate = useNavigate(); // ✅ Ensure this is declared
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.get(
-          "https://test.omniswift.com.ng/api/viewAllData"
-        );
-
-        console.log("API Response:", response.data); // ✅ Debug API Response
-
-        // ✅ Extract students correctly
-        setStudents(response.data.data.students);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-        setError(error.message);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchData();
-  }, []);
-
+  
   const handleRowClick = (student) => {
     // ✅ Pass student ID in URL + State
     navigate(`/result/${student.id}`, { state: { student } });

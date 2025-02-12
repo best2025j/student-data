@@ -11,6 +11,11 @@ export default {
         danger: "#EB0000",
       },
     },
+
+    corePlugins: {
+      preflight: false, // ✅ Disable Tailwind's default color normalization
+    },
+    experimental: { optimizeUniversalDefaults: true }, // ✅ Force Tailwind to use RGB
   },
-  plugins: [require('tailwind-scrollbar'), retailwindTypography()], // Example of adding plugins
+  plugins: [require("tailwind-scrollbar"), retailwindTypography()], // Example of adding plugins
 };

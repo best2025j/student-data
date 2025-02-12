@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
@@ -6,6 +6,7 @@ export default function Table() {
   const [students, setStudents] = useState([]); // State to store student data
   const [loading, setLoading] = useState(true); // Loading state
   const [error, setError] = useState(null); // Error state
+  const resultRef = useRef(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -29,11 +30,44 @@ export default function Table() {
     fetchData();
   }, []);
 
+  const [loadingDownload, setLoadingDownload] = useState(false);
   const navigate = useNavigate();
 
   const handleRowClick = (student) => {
     // ✅ Pass student ID in URL + State
     navigate(`/result/${student.id}`, { state: { student } });
+  };
+
+  // for the pdf dowload
+  const handleDownloadPDF = async () => {
+    if (!resultRef.current) {
+      console.error("Error: resultRef is null");
+      return;
+    }
+
+    try {
+      const canvas = await html2canvas(resultRef.current, {
+        scale: 2, // ✅ Higher scale for better quality
+        backgroundColor: "#ffffff",
+        useCORS: true,
+      });
+
+      const imgData = canvas.toDataURL("image/png");
+      const pdf = new jsPDF("p", "mm", "a4");
+
+      const imgWidth = 210; // A4 width in mm
+      const imgHeight = (canvas.height * imgWidth) / canvas.width; // Maintain aspect ratio
+
+      pdf.addImage(imgData, "PNG", 0, 10, imgWidth, imgHeight);
+      pdf.save(`Student_Result_${studentData.data.surname}.pdf`);
+    } catch (error) {
+      console.error("Error generating PDF:", error);
+    }
+
+    //
+    html2canvas(document.body).then(function (canvas) {
+      document.body.appendChild(canvas);
+    });
   };
 
   return (
@@ -68,7 +102,7 @@ export default function Table() {
         <div className="overflow-y-auto w-full h-[450px]">
           <table className="table-fixed w-full border-collapse">
             <thead>
-              <tr className="bg-gray-200 text-black text-left  text-sm font-bold h-14">
+              <tr className="bg-gray-200 text-black text-left text-sm font-bold h-14">
                 <th className="text-center">S/N</th>
                 <th>Surname</th>
                 <th>First Name</th>
@@ -95,11 +129,14 @@ export default function Table() {
                   <td>{student.level || "N/A"}</td>
                   <td>{student.state || "N/A"}</td>
                   <td className="text-center">
-                    <button
-                      onClick={(e) => e.stopPropagation()} // ✅ Prevents row click when button is clicked
+                    <button 
+                      onClick={(e) => {
+                        e.stopPropagation(); // ✅ Prevents row click when button is clicked
+                        handleDownloadPDF(student.id); // ✅ Navigate and trigger download in Result.jsx
+                      }}
                       className="bg-green-500 hover:bg-green-600 transition-all font-normal w-[126px] h-[35px] text-xs text-white rounded"
                     >
-                      Download File
+                      {loadingDownload ? "Downloading..." : "Download File"}
                     </button>
                   </td>
                 </tr>

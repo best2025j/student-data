@@ -18,6 +18,7 @@
     "axios": "^1.7.9",
     "cors-anywhere": "^0.4.4",
     "html2canvas": "^1.4.1",
+    "html2canvas-pro": "^1.5.8",
     "jspdf": "^2.5.2",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",

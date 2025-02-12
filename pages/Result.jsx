@@ -1,28 +1,29 @@
-import { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useEffect, useState, useRef } from "react";
+import { useParams, useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
+import jsPDF from "jspdf";
+import html2canvas from "html2canvas-pro";
 
 export default function Result() {
-  const { id } = useParams(); // Get student ID from URL
+  const { id } = useParams();
   const navigate = useNavigate();
+  const location = useLocation();
   const [studentData, setStudentData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const resultRef = useRef(null);
+  const hasDownloaded = sessionStorage.getItem(`downloaded_${id}`); // ✅ Track per student
 
   useEffect(() => {
     const fetchStudentResult = async () => {
       try {
         const response = await axios.post(
           "https://test.omniswift.com.ng/api/viewResult/2",
-          {
-            student_id: id, // ✅ Send ID correctly in the request body
-          }
+          { student_id: id }
         );
 
-        console.log("Student Result API Response:", response.data);
-
         if (response.data && response.data.data) {
-          setStudentData(response.data.data); // ✅ Store response data correctly
+          setStudentData(response.data.data);
         } else {
           throw new Error("Invalid response data");
         }
@@ -36,6 +37,48 @@ export default function Result() {
 
     fetchStudentResult();
   }, [id]);
+
+  // ✅ Only download once without causing re-renders
+  useEffect(() => {
+    if (studentData && location.state?.autoDownload && !hasDownloaded) {
+      sessionStorage.setItem(`downloaded_${id}`, "true"); // ✅ Set download as completed
+      setTimeout(() => {
+        handleDownloadPDF();
+      }, 1000);
+    }
+  }, [studentData, location.state]);
+
+  // for the pdf dowload
+  const handleDownloadPDF = async () => {
+    if (!resultRef.current) {
+      console.error("Error: resultRef is null");
+      return;
+    }
+
+    try {
+      const canvas = await html2canvas(resultRef.current, {
+        scale: 2, // ✅ Higher scale for better quality
+        backgroundColor: "#ffffff",
+        useCORS: true,
+      });
+
+      const imgData = canvas.toDataURL("image/png");
+      const pdf = new jsPDF("p", "mm", "a4");
+
+      const imgWidth = 210; // A4 width in mm
+      const imgHeight = (canvas.height * imgWidth) / canvas.width; // Maintain aspect ratio
+
+      pdf.addImage(imgData, "PNG", 0, 10, imgWidth, imgHeight);
+      pdf.save(`Student_Result_${studentData.data.surname}.pdf`);
+    } catch (error) {
+      console.error("Error generating PDF:", error);
+    }
+
+    //
+    html2canvas(document.body).then(function (canvas) {
+      document.body.appendChild(canvas);
+    });
+  };
 
   if (loading)
     return (
@@ -63,6 +106,7 @@ export default function Result() {
         Loading student result...
       </p>
     );
+
   if (error)
     return (
       <p className="flex flex-col justify-center items-center h-screen w-full text-blue-500">
@@ -89,6 +133,7 @@ export default function Result() {
         {error}
       </p>
     );
+
   if (!studentData)
     return (
       <p className="flex flex-col justify-center items-center h-screen w-full text-blue-500">
@@ -129,7 +174,7 @@ export default function Result() {
   } = studentData; // Destructure data
 
   return (
-    <div className="space-y-4 w-full h-full px-4">
+    <div ref={resultRef} className="space-y-4 w-full h-full px-4">
       <div className="flex justify-between items-center w-full h-full">
         {/* School Logo */}
         <div>
@@ -210,7 +255,7 @@ export default function Result() {
 
       {/* Results Table */}
       <div className="w-full bg-white">
-        <div className="overflow-y-auto full ">
+        <div className="overflow-y-auto w-full">
           <table className="table-fixed w-full border-collapse bg-white">
             <thead>
               <tr className="bg-[#0D7590] text-white text-left text-sm font-bold h-14">
@@ -274,13 +319,10 @@ export default function Result() {
         Remarks: <span className="text-green-600">{cummulative?.remarks}</span>
       </div>
 
-      {/* Back Button */}
-      <button
-        onClick={() => navigate(-1)}
-        className="mt-6 text-blue-600  hover:text-blue-700 transition"
-      >
-        Go Back
-      </button>
+      <div className="bottom-10 space-y-4 absolute">
+        <input type="text" className="outline-none border-b" />
+        <h1 className="text-black-10 text-sm">Registrar</h1>
+      </div>
     </div>
   );
 }

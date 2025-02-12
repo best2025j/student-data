@@ -3,36 +3,33 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Table from "../components/Table";
 
+const formFields = [
+  { id: "age", label: "Age", type: "text" },
+  { id: "state", label: "State", type: "text" },
+  {
+    id: "gender",
+    type: "select",
+    label: "Gender",
+    options: [
+      { value: "male", label: "Male" },
+      { value: "female", label: "Female" },
+      { value: "other", label: "Other" },
+    ],
+  },
+  {
+    id: "level",
+    type: "select",
+    label: "Level",
+    options: [
+      { value: "100", label: "100" },
+      { value: "200", label: "200" },
+      { value: "300", label: "300" },
+      { value: "400", label: "400" },
+    ],
+  },
+];
 
- const formFields = [
-    { id: "age", label: "Age", type: "text" },
-    { id: "state", label: "State", type: "text" },
-    {
-      id: "gender",
-      type: "select",
-      label: "Gender",
-      options: [
-        { value: "male", label: "Male" },
-        { value: "female", label: "Female" },
-        { value: "other", label: "Other" },
-      ],
-    },
-    {
-      id: "level",
-      type: "select",
-      label: "Level",
-      options: [
-        { value: "100", label: "100" },
-        { value: "200", label: "200" },
-        { value: "300", label: "300" },
-        { value: "400", label: "400" },
-      ],
-    },
- ];
-  
 export default function Home() {
- 
-
   const [formData, setFormData] = useState({});
   // const navigate = useNavigate();
 
@@ -51,8 +48,6 @@ export default function Home() {
       return;
     }
 
-    // Navigate to the DisplayPage with form data
-    // navigate("/result", { state: { formData } });
   };
 
   return (

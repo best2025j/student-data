@@ -1,10 +1,9 @@
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import "./App.css";
+import { createHashRouter, RouterProvider } from "react-router-dom"; // ✅ Use createHashRouterimport "./App.css";
 import Home from "../pages";
 import Result from "../pages/Result";
 
 // ✅ Define routes properly
-const router = createBrowserRouter(
+const router = createHashRouter(
   [
     {
       path: "/",

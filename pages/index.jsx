@@ -1,21 +1,13 @@
 import { useState, useEffect } from "react";
-import Table from "../components/Table";
 import SearchForm from "../components/SearchForm";
+import Table from "../components/Table";
 
-export default function Home() {
+const Home = () => {
   // ✅ State must be declared inside the component
   const [students, setStudents] = useState([]); // Store student data
   const [filteredStudents, setFilteredStudents] = useState([]); // Store filtered students
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-
-  
-  // const [filters, setFilters] = useState({
-  //   age: "",
-  //   state: "",
-  //   level: "",
-  //   gender: "",
-  // });
 
   // ✅ Fetch Data Once Component Mounts
   useEffect(() => {
@@ -67,20 +59,16 @@ export default function Home() {
           <div className="w-full h-[336px] p-8 bg-white ">
             <h1 className="text-gray-10">Filter Student Table By:</h1>
 
-           
             {/* ✅ Pass applyFilters function to the SearchForm */}
             <SearchForm applyFilters={applyFilters} />
           </div>
 
-
           {/* ✅ Pass filteredStudents to Table */}
-          <Table
-            students={filteredStudents}
-            loading={loading}
-            error={error}
-          />
+          <Table students={filteredStudents} loading={loading} error={error} />
         </div>
       </div>
     </>
   );
-}
+};
+
+export default Home;

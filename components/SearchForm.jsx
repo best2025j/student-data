@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-export default function SearchForm({ applyFilters }) {
+const SearchForm = ({ applyFilters }) => {
   const formFields = [
     { id: "age", label: "Age", type: "text" },
     { id: "state", label: "State", type: "text" },
@@ -90,14 +90,16 @@ export default function SearchForm({ applyFilters }) {
       </div>
     </form>
   );
+};
+
+export default SearchForm;
+
+{
+  /* search filter*/
 }
 
-
-
-
- {/* search filter*/}
-
-            {/* <form
+{
+  /* <form
               onSubmit={handleSubmit}
               className="gap-4 grid grid-cols-3 items-center py-8 w-full"
             >
@@ -149,4 +151,5 @@ export default function SearchForm({ applyFilters }) {
                   className="rounded py-4 bg-green-500 text-white w-full hover:bg-green-600 transition"
                 />
               </div>
-            </form> */}
+            </form> */
+}

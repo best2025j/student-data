@@ -1,8 +1,7 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import Home from "../pages";
-import Result from "../pages/Result";
 import "./App.css";
-import { useEffect, useState } from "react";
+import Home from "../pages";
+import { Result } from "postcss";
 
 // ✅ Define routes properly
 const router = createBrowserRouter(

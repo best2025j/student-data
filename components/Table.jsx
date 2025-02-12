@@ -1,9 +1,8 @@
 import { useNavigate } from "react-router-dom";
 
-export default function Table({ students, loading, error }) {
+const Table = ({ students, loading, error }) => {
   const navigate = useNavigate(); // ✅ Ensure this is declared
 
-  
   const handleRowClick = (student) => {
     // ✅ Pass student ID in URL + State
     navigate(`/result/${student.id}`, { state: { student } });
@@ -110,4 +109,6 @@ export default function Table({ students, loading, error }) {
       )}
     </div>
   );
-}
+};
+
+export default Table;

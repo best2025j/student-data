@@ -4,7 +4,7 @@ import axios from "axios";
 import jsPDF from "jspdf";
 import html2canvas from "html2canvas-pro";
 
-export default function Result() {
+const Result = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const location = useLocation();
@@ -329,4 +329,6 @@ export default function Result() {
       </div>
     </div>
   );
-}
+};
+
+export default Result;

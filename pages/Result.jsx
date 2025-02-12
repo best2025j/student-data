@@ -3,6 +3,8 @@ import { useParams, useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 import jsPDF from "jspdf";
 import html2canvas from "html2canvas-pro";
+import Logo from "../assets/Logo.png"; // ✅ Import the image
+import Passport from "../assets/Passport.png"; // ✅ Import the image
 
 const Result = () => {
   const { id } = useParams();
@@ -182,11 +184,7 @@ const Result = () => {
       <div className="flex justify-between items-center w-full h-full">
         {/* School Logo */}
         <div>
-          <img
-            src="/Logo.png"
-            alt="School Logo"
-            className="w-32 mx-auto mb-4"
-          />
+          <img src={Logo} alt="School Logo" className="w-32 mx-auto mb-4" />
         </div>
 
         <div className="flex flex-col items-center text-center py-4  gap-4">
@@ -209,7 +207,7 @@ const Result = () => {
         <div>
           {/* Display Student Profile Picture */}
           <img
-            src="/Passport.png"
+            src={Passport}
             alt="Student Profile"
             className="w-[100px] h-[100px] mx-auto border border-gray-300 shadow-sm"
           />

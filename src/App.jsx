@@ -1,6 +1,9 @@
-import { createHashRouter, RouterProvider } from "react-router-dom"; // ✅ Use createHashRouterimport "./App.css";
-import Home from "../pages";
-import Result from "../pages/Result";
+import { createHashRouter, RouterProvider } from "react-router-dom"; // ✅ Correct import
+import { Suspense, lazy } from "react"; // ✅ Import Suspense from react
+import "./App.css";
+
+const Home = lazy(() => import("../pages"));
+const Result = lazy(() => import("../pages/Result"));
 
 // ✅ Define routes properly
 const router = createHashRouter(
@@ -8,13 +11,24 @@ const router = createHashRouter(
     {
       path: "/",
       element: (
-        <div className="!bg-[#F6F6F6] min-h-screen">
-          <Home />
-        </div>
+        <Suspense fallback={<p>Loading...</p>}>
+          <div className="!bg-[#F6F6F6] min-h-screen">
+            <Home />
+          </div>
+        </Suspense>
       ),
     },
-    { path: "/result/:id", element: <Result /> },
+    
+    {
+      path: "/result/:id",
+      element: (
+        <Suspense fallback={<p>Loading...</p>}>
+          <Result />
+        </Suspense>
+      ),
+    },
   ],
+
   {
     future: {
       v7_relativeSplatPath: true, // Enables relative paths in nested routes

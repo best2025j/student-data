@@ -1,12 +1,9 @@
-import { useEffect, useRef, useState } from "react";
-import axios from "axios";
+import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
-export default function Table() {
-  const [students, setStudents] = useState([]); // State to store student data
-  const [loading, setLoading] = useState(true); // Loading state
-  const [error, setError] = useState(null); // Error state
-  const resultRef = useRef(null);
+export default function Table({ students, loading, error }) {
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -30,44 +27,34 @@ export default function Table() {
     fetchData();
   }, []);
 
-  const [loadingDownload, setLoadingDownload] = useState(false);
-  const navigate = useNavigate();
-
   const handleRowClick = (student) => {
     // ✅ Pass student ID in URL + State
     navigate(`/result/${student.id}`, { state: { student } });
   };
 
-  // for the pdf dowload
-  const handleDownloadPDF = async () => {
-    if (!resultRef.current) {
-      console.error("Error: resultRef is null");
-      return;
-    }
-
+  // ✅ Fetch student result and navigate to Result.jsx
+  const handleFetchResult = async (studentId) => {
     try {
-      const canvas = await html2canvas(resultRef.current, {
-        scale: 2, // ✅ Higher scale for better quality
-        backgroundColor: "#ffffff",
-        useCORS: true,
+      const response = await axios.post(
+        "https://test.omniswift.com.ng/api/viewResult/2",
+        {
+          student_id: studentId,
+        }
+      );
+
+      if (!response.data || !response.data.data) {
+        console.error("Invalid response data", response);
+        return;
+      }
+
+      navigate(`/result/${studentId}`, {
+        state: { studentData: response.data.data },
       });
 
-      const imgData = canvas.toDataURL("image/png");
-      const pdf = new jsPDF("p", "mm", "a4");
-
-      const imgWidth = 210; // A4 width in mm
-      const imgHeight = (canvas.height * imgWidth) / canvas.width; // Maintain aspect ratio
-
-      pdf.addImage(imgData, "PNG", 0, 10, imgWidth, imgHeight);
-      pdf.save(`Student_Result_${studentData.data.surname}.pdf`);
+      // ✅ Pass data via state
     } catch (error) {
-      console.error("Error generating PDF:", error);
+      console.error("Error fetching student result:", error);
     }
-
-    //
-    html2canvas(document.body).then(function (canvas) {
-      document.body.appendChild(canvas);
-    });
   };
 
   return (
@@ -129,14 +116,11 @@ export default function Table() {
                   <td>{student.level || "N/A"}</td>
                   <td>{student.state || "N/A"}</td>
                   <td className="text-center">
-                    <button 
-                      onClick={(e) => {
-                        e.stopPropagation(); // ✅ Prevents row click when button is clicked
-                        handleDownloadPDF(student.id); // ✅ Navigate and trigger download in Result.jsx
-                      }}
-                      className="bg-green-500 hover:bg-green-600 transition-all font-normal w-[126px] h-[35px] text-xs text-white rounded"
+                    <button
+                      onClick={() => handleFetchResult(student.id)}
+                      className="bg-green-500 hover:bg-green-600 cursor-pointer transition-all font-normal w-[126px] h-[35px] text-xs text-white rounded"
                     >
-                      {loadingDownload ? "Downloading..." : "Download File"}
+                      Download File
                     </button>
                   </td>
                 </tr>

@@ -12,7 +12,7 @@ export default function Result() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const resultRef = useRef(null);
-  const hasDownloaded = sessionStorage.getItem(`downloaded_${id}`); // ✅ Track per student
+  const hasDownloaded = sessionStorage.getItem(`downloaded_${id}`); // ✅ Prevent multiple downloads
 
   useEffect(() => {
     const fetchStudentResult = async () => {
@@ -38,17 +38,21 @@ export default function Result() {
     fetchStudentResult();
   }, [id]);
 
-  // ✅ Only download once without causing re-renders
+  // ✅ Automatically trigger PDF download after component renders
   useEffect(() => {
     if (studentData && location.state?.autoDownload && !hasDownloaded) {
-      sessionStorage.setItem(`downloaded_${id}`, "true"); // ✅ Set download as completed
-      setTimeout(() => {
-        handleDownloadPDF();
-      }, 1000);
+      sessionStorage.setItem(`downloaded_${id}`, "true"); // ✅ Mark download as completed
+
+      // ✅ Ensure the page is fully rendered before capturing
+      requestAnimationFrame(() => {
+        setTimeout(() => {
+          handleDownloadPDF();
+        }, 1000);
+      });
     }
   }, [studentData, location.state]);
 
-  // for the pdf dowload
+  //
   const handleDownloadPDF = async () => {
     if (!resultRef.current) {
       console.error("Error: resultRef is null");
@@ -57,7 +61,7 @@ export default function Result() {
 
     try {
       const canvas = await html2canvas(resultRef.current, {
-        scale: 2, // ✅ Higher scale for better quality
+        scale: 4,
         backgroundColor: "#ffffff",
         useCORS: true,
       });
@@ -65,11 +69,11 @@ export default function Result() {
       const imgData = canvas.toDataURL("image/png");
       const pdf = new jsPDF("p", "mm", "a4");
 
-      const imgWidth = 210; // A4 width in mm
-      const imgHeight = (canvas.height * imgWidth) / canvas.width; // Maintain aspect ratio
+      const imgWidth = 210;
+      const imgHeight = (canvas.height * imgWidth) / canvas.width;
 
       pdf.addImage(imgData, "PNG", 0, 10, imgWidth, imgHeight);
-      pdf.save(`Student_Result_${studentData.data.surname}.pdf`);
+      pdf.save(`Student_Result_${studentData.surname}.pdf`);
     } catch (error) {
       console.error("Error generating PDF:", error);
     }

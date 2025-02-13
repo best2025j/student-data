@@ -14,8 +14,8 @@ const Result = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const resultRef = useRef(null);
-  const hasDownloaded = sessionStorage.getItem(`downloaded_${id}`); // ✅ Prevent multiple downloads
 
+  // functions to fetch student result
   useEffect(() => {
     const fetchStudentResult = async () => {
       try {
@@ -42,19 +42,26 @@ const Result = () => {
 
   // ✅ Automatically trigger PDF download after component renders
   useEffect(() => {
-    if (studentData && location.state?.autoDownload && !hasDownloaded) {
-      sessionStorage.setItem(`downloaded_${id}`, "true"); // ✅ Mark download as completed
-
-      // ✅ Ensure the page is fully rendered before capturing
-      requestAnimationFrame(() => {
-        setTimeout(() => {
-          handleDownloadPDF();
-        }, 1000);
-      });
+    if (studentData) {
+      setTimeout(() => {
+        handleDownloadPDF();
+      }, 1500); // ✅ Delay ensures page fully renders before capturing
     }
-  }, [studentData, location.state]);
+  }, [studentData]); // ✅ Trigger when studentData is available
 
-  //
+  // useEffect(() => {
+  //   const hasDownloaded = sessionStorage.getItem(`downloaded_${id}`);
+
+  //   if (studentData && !hasDownloaded) {
+  //     sessionStorage.setItem(`downloaded_${id}`, "true");
+
+  //     setTimeout(() => {
+  //       handleDownloadPDF();
+  //     }, 1500);
+  //   }
+  // }, []); // ✅ Empty dependency array prevents re-renders
+
+  // function to download the pdf result
   const handleDownloadPDF = async () => {
     if (!resultRef.current) {
       console.error("Error: resultRef is null");

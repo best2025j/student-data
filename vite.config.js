@@ -8,6 +8,7 @@ export default defineConfig({
   base: "/student-data/", // ✅ Fix for GitHub Pages
 
   build: {
+    outDir: "dist", // Make sure this matches your deployment settings
     chunkSizeWarningLimit: 10000, // ✅ Change warning limit to 600kB
     rollupOptions: {
       output: {

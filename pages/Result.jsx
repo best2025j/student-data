@@ -41,24 +41,44 @@ const Result = () => {
   }, [id]);
 
   // ✅ Automatically trigger PDF download after component renders
+  // useEffect(() => {
+  //   if (studentData) {
+  //     setTimeout(() => {
+  //       handleDownloadPDF();
+  //     }, 1500); // ✅ Delay ensures page fully renders before capturing
+  //   }
+  // }, [studentData]); // ✅ Trigger when studentData is available
+
   useEffect(() => {
     if (studentData) {
-      setTimeout(() => {
-        handleDownloadPDF();
-      }, 1500); // ✅ Delay ensures page fully renders before capturing
+      const alreadyDownloaded = sessionStorage.getItem(
+        `downloaded_${studentData.id}`
+      );
+
+      if (!alreadyDownloaded) {
+        setTimeout(() => {
+          handleDownloadPDF();
+        }, 1500); // Delay ensures page fully renders before capturing
+      }
     }
-  }, [studentData]); // ✅ Trigger when studentData is available
+  }, [studentData]); // Trigger when studentData is available
 
- 
-
-  // function to download the pdf result
+  // Function to download the PDF result
   const handleDownloadPDF = async () => {
+    // Check if already downloading
+    if (resultRef.current?.dataset.downloading === "true") {
+      return;
+    }
+
     if (!resultRef.current) {
       console.error("Error: resultRef is null");
       return;
     }
 
     try {
+      // Set downloading flag
+      resultRef.current.dataset.downloading = "true";
+
       const canvas = await html2canvas(resultRef.current, {
         scale: 4,
         backgroundColor: "#ffffff",
@@ -73,14 +93,19 @@ const Result = () => {
 
       pdf.addImage(imgData, "PNG", 0, 10, imgWidth, imgHeight);
       pdf.save(`Student_Result_${studentData.surname}.pdf`);
+
+      // Mark as downloaded in sessionStorage
+      sessionStorage.setItem(`downloaded_${studentData.id}`, "true");
+
+      // Clear the downloading flag after completion
+      resultRef.current.dataset.downloading = "false";
     } catch (error) {
       console.error("Error generating PDF:", error);
+      // Clear the downloading flag on error
+      if (resultRef.current) {
+        resultRef.current.dataset.downloading = "false";
+      }
     }
-
-    //
-    // html2canvas(document.body).then(function (canvas) {
-    //   document.body.appendChild(canvas);
-    // });
   };
 
   if (loading)
@@ -200,7 +225,6 @@ const Result = () => {
             </p>
           </div>
         </div>
-
         <div>
           {/* Display Student Profile Picture */}
           <img

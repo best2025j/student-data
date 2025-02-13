@@ -5,12 +5,13 @@ const Table = ({ students, loading, error }) => {
   const navigate = useNavigate(); // ✅ Ensure this is declared
 
   const handleRowClick = (student) => {
-    // ✅ Pass student ID in URL + State
-    navigate(`/result/${student.id}`, { state: { student } });
+    navigate(`/result/${student.id}`); // Just view the result
   };
 
   // ✅ Fetch student result and navigate to Result.jsx
-  const handleFetchResult = async (studentId) => {
+  const handleFetchResult = async (e, studentId) => {
+    e.stopPropagation(); // ✅ Prevent row click
+
     try {
       const response = await axios.post(
         "https://test.omniswift.com.ng/api/viewResult/2",
@@ -27,8 +28,6 @@ const Table = ({ students, loading, error }) => {
       navigate(`/result/${studentId}`, {
         state: { studentData: response.data.data },
       });
-
-      // ✅ Pass data via state
     } catch (error) {
       console.error("Error fetching student result:", error);
     }
@@ -81,9 +80,9 @@ const Table = ({ students, loading, error }) => {
             <tbody>
               {students.map((student, index) => (
                 <tr
-                  key={index}
-                  onClick={() => handleRowClick(student)} // ✅ Navigate when row is clicked
-                  className="border-b text-sm border-gray-300 h-14 text-left text-black-10 capitalize cursor-pointer"
+                  key={student.id || index}
+                  onClick={() => handleRowClick(student)} // This will just view
+                  className="border-b text-sm border-gray-300 h-14 text-left text-black-10 capitalize cursor-copy"
                 >
                   <td className="text-center">{index + 1}</td>
                   <td>{student.surname || "N/A"}</td>
@@ -94,7 +93,7 @@ const Table = ({ students, loading, error }) => {
                   <td>{student.state || "N/A"}</td>
                   <td className="text-center">
                     <button
-                      onClick={() => handleFetchResult(student.id)}
+                      onClick={(e) => handleFetchResult(e, student.id)} // This will trigger download
                       className="bg-green-500 hover:bg-green-600 cursor-pointer transition-all font-normal w-[126px] h-[35px] text-xs text-white rounded"
                     >
                       Download File

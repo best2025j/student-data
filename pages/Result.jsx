@@ -49,17 +49,7 @@ const Result = () => {
     }
   }, [studentData]); // ✅ Trigger when studentData is available
 
-  // useEffect(() => {
-  //   const hasDownloaded = sessionStorage.getItem(`downloaded_${id}`);
-
-  //   if (studentData && !hasDownloaded) {
-  //     sessionStorage.setItem(`downloaded_${id}`, "true");
-
-  //     setTimeout(() => {
-  //       handleDownloadPDF();
-  //     }, 1500);
-  //   }
-  // }, []); // ✅ Empty dependency array prevents re-renders
+ 
 
   // function to download the pdf result
   const handleDownloadPDF = async () => {
@@ -88,9 +78,9 @@ const Result = () => {
     }
 
     //
-    html2canvas(document.body).then(function (canvas) {
-      document.body.appendChild(canvas);
-    });
+    // html2canvas(document.body).then(function (canvas) {
+    //   document.body.appendChild(canvas);
+    // });
   };
 
   if (loading)
